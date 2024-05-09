@@ -31,7 +31,26 @@ let rec prolog_main (database:program) goal :main_return_t=
         (Queue.to_seq database)
       )
 
-    | _ -> Seq.empty
+    | Or (goal1, goal2) ->
+      Seq.append
+      (prolog_main database goal1)
+      (prolog_main database goal2)
+    | Not g1 ->
+      let s1 = prolog_main database g1 in
+      if Seq.is_empty s1 then
+        Seq.return StringMap.empty
+      else
+        Seq.empty
+    | And (g1, g2) ->
+      let s1 = prolog_main database g1 in
+      Seq.flat_map
+      (fun subs -> 
+        let s2 = prolog_main database (subst_goal_ast subs g2) in
+        Seq.map
+        (fun subs2 -> compose_substitutions subs subs2)
+        s2        
+      )
+      s1
 
 
 let print_subst sub =
@@ -52,9 +71,9 @@ let main_program goal database =
   let result = prolog_main database goal in
   Seq.iter
   (fun subs ->
-    print_endline "a solution:";
+    print_endline "\na solution:";
     print_subst subs;
     )
   result;
-  print_endline "\x1B[31mfail\x1B[0m"
+  print_endline "\x1B[31m\nfail\x1B[0m"
     

@@ -1,0 +1,20 @@
+happy(you).
+happy(me).
+eat(me).
+live(X):-happy(X), eat(X).
+
+?- lively(X).
+?- happy(me).
+?- eat(X).
+?- happy(X).
+?- live(you).
+?- live(me).
+?- live(X).
+
+name(X):- happy(X).
+?- name(Y).
+
+play(you).
+?- live(X); play(X).
+?- /+ live(you).
+?- /+ live(X).
