@@ -1,0 +1,7 @@
+(ocamllex lexer)
+
+(ocamlyacc parser)
+
+(library
+ (name frontEnd)
+ (modules Ast Ast_printers Lexer Parser))

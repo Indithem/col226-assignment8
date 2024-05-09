@@ -1,4 +1,12 @@
 # col226-assignment8
+
+## How to run?
+Compile an executable using Dune.
+`./exec <file name>`.
+Give the prolog database in the file name.
+
+It will start an interactive shell where you can query the database.
+
 ## Problem statement
 You will write a simplified version of a Prolog interpreter in OCaml as follows. 
 

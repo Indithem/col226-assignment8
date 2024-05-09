@@ -1,0 +1,4 @@
+(library
+ (name unification)
+ (libraries frontEnd)
+ (modules mgu subst))
