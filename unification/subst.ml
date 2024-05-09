@@ -49,6 +49,13 @@ let rec subst_heads (sub:substitution) (h:head_term) :head_term=
   | _ -> h
   ;; 
 
+let rec subst_goal_ast sub g =
+  match g with
+    | Atomic t -> Atomic (subst sub t)
+    | And (g1, g2) -> And (subst_goal_ast sub g1, subst_goal_ast sub g2)
+    | Or (g1, g2) -> Or (subst_goal_ast sub g1, subst_goal_ast sub g2)
+    | Not g1 -> Not (subst_goal_ast sub g1)
+    | OfCourse -> OfCourse
 
 (*Finds the subsition s such that s(t) = s2(s1(t)) = (s1 o s2) (t)*)
 let compose_substitutions (s1:substitution) (s2:substitution) :substitution= 

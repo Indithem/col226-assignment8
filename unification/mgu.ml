@@ -20,11 +20,20 @@ let mgu h t :Subst.substitution=
       | K'ary k, Var y ->
         check_var_in_ht y (K'ary k);
         Subst.StringMap.singleton y (Subst.head_term_to_term (K'ary k))
+      | Var x, t ->
+        Subst.StringMap.singleton x t
+      | t, Var x ->
+        Subst.StringMap.singleton x (Subst.head_term_to_term t)
 
       | K'ary {symbol = s1; args = a1}, K'ary {symbol = s2; args = a2} when s1 = s2 -> 
         if s1 <> s2 || List.length a1 <> List.length a2 then raise NOT_UNIFIABLE else
           List.fold_left2
           (fun sk t1 t2 -> 
+            if Option.is_some (Sys.getenv_opt "DEBUG") then (
+            print_endline "t1:";
+            FrontEnd.Ast_printers.print_head_terms t1 0;
+            print_endline "t2:";
+            FrontEnd.Ast_printers.print_term t2 0;);
             Subst.compose_substitutions sk (mgu_helper t1 t2 sk)
           )
           Subst.StringMap.empty a1 a2
